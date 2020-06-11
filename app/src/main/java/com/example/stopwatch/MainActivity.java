@@ -11,6 +11,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int mSeconds = 0;
     private boolean mIsRunning;
+    private boolean mWasRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState !=null) {
             mSeconds = savedInstanceState.getInt("seconds");
             mIsRunning = savedInstanceState.getBoolean("isRunning");
+            mWasRunning = savedInstanceState.getBoolean("isWasRunning");
         }
 
         runTimer();
@@ -69,5 +71,38 @@ public class MainActivity extends AppCompatActivity {
 
         outState.putInt("seconds",mSeconds);
         outState.putBoolean("isRunning",mIsRunning);
+        outState.putBoolean("isWasRunning",mWasRunning);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mWasRunning){
+            mIsRunning = true;
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        mWasRunning = mIsRunning;
+        mIsRunning = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mWasRunning){
+            mIsRunning = true;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mWasRunning = mIsRunning;
+        mIsRunning = true;
     }
 }
